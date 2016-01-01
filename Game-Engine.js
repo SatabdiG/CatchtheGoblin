@@ -47,12 +47,14 @@ gbImage.src="images/monster.png";
 //Game Objects
 
 var hero={
-    speed: 256,
+    speed: 256
 
 };
 
 
-var monster ={};
+var monster ={
+    speed : 10
+};
 
 var monsterscaught = 0;
 
@@ -80,6 +82,7 @@ var reset=function(){
     //Position the monster randomly somewhere
     monster.x=32+(Math.random()* canvas.width - 64);
     monster.y=32+(Math.random()*canvas.height - 64);
+    monster.speed = (monster.speed > 50 ) ? ( monster.speed) : (monster.speed + monsterscaught);
 };
 
 
@@ -87,19 +90,21 @@ var update=function(modifier){
     if(38 in keysDown){
         //Player holding up
         hero.y -=hero.speed * modifier;
-
+         monster.y = ( monster.y >0 ) ? ( monster.y - monster.speed * modifier ) : canvas.height - 32;
     }
     //player holding down
     if(40 in keysDown)
     {
 
         hero.y+=hero.speed * modifier;
+        monster.y = ( monster.y + monster.speed * modifier) % canvas.height;
 
     }
     //Player is holding left
     if(37 in keysDown)
     {
         hero.x -=hero.speed * modifier;
+        monster.x = (monster.x > 0) ? (monster.x - monster.speed * modifier) : canvas.width - 32;
 
 
     }
@@ -109,6 +114,7 @@ var update=function(modifier){
     {
 
         hero.x += hero.speed * modifier;
+        monster.x = (monster.x +  monster.speed * modifier) % canvas.width;
 
     }
 
@@ -124,9 +130,8 @@ var update=function(modifier){
         ++monsterscaught;
         reset();
 
-
-
     }
+
 
 };
 
@@ -148,12 +153,13 @@ var render= function(){
        ctx.drawImage(gbImage, monster.x, monster.y);
     }
 
+
     //score
     ctx.fillStyle="rgb(250, 250, 250)";
     ctx.font="24px arial";
     ctx.textAlign= "left";
     ctx.textBaseline="top";
-    ctx.fillText("Monsters Caught: "+monsterscaught, 32, 32);
+    ctx.fillText("Monsters Caught: "+ monsterscaught, 32, 32);
 
 };
 
